@@ -1,0 +1,132 @@
+
+*{
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+   outline: none;  border: none;
+}
+
+header {visibility: hidden;}
+
+.home {
+    display: flex;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;  
+    width: 100vw;
+    background-image:linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url("https://www.bmw.com.tr/tr/elektrikli-otomobiller/_jcr_content/root/maincontent/contentblueprint_579971336/contentblueprint_854/contentblueprint/image.coreimg.jpeg/1713446402948/header-desktop-v2.jpeg");   
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: fixed;
+    z-index: 0;  
+    transition: filter 0.5s ease; 
+}
+.home .content {
+    position: fixed;
+    z-index: 1;
+    max-width: 50rem;
+    text-align: right;
+    color: #9BB0C1;
+    transform: translateX(30%);
+}
+
+@keyframes fadeInFromTop {
+0% { opacity: 0; transform: translateY(-50px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInFromBottom {
+0% { opacity: 0; transform: translateY(50px); }
+100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeOut {
+0% { opacity: 1; }
+100% { opacity: 0; }
+}
+
+.home .content h3 {
+font-size: 5rem;
+color: #005175;
+animation: fadeInFromTop 3s ease-in-out, fadeOut 12s 9s forwards; /* 3 saniye görünür, 9 saniye sonra kaybolur */
+}
+
+.home .content p {
+font-size: 1.5rem;
+color: #005175;
+padding: 2rem 0;
+line-height: 1.5;
+animation: fadeInFromBottom 3s ease-in-out, fadeOut 12s 9s forwards; /* 3 saniye görünür, 9 saniye sonra kaybolur */
+}
+ .stApp {
+    z-index: 2; 
+}
+
+.stSidebar {
+    position: relative; 
+    background-color: rgba(174, 197, 169, 0.393);
+    box-shadow:0 .5rem 1rem rgba(0, 0, 0, 0.1);
+    z-index: 3; 
+}
+
+.stSlider > div > div > div {
+    background-color: #E0E0E0; 
+    border-radius: 10px;  
+}
+.stSlider > div > div > div > div {
+    background-color: #1A355F;
+}
+.stSlider > div > div > div > div > div {
+    background-color: #1A355F; 
+    border-radius: 10px; 
+    height: 25px; 
+    margin-top: -4px;        
+}
+
+div[data-baseweb="select"]>div {
+background-color:#1A355F; 
+color:rgba(255, 255, 255, 0.763);
+border-color:rgba(174, 197, 169, 0.393);
+}
+
+span[data-baseweb="tag"] {
+    background-color:rgba(255, 255, 255, 0.763) !important; 
+    color: #1A355F;         
+}
+
+st-cu st-bp st-ar st-bq st-br st-cv st-cw {
+ color:#9BB0C1
+}
+
+.stExpander{ 
+    color: black;             
+    background: linear-gradient(328deg, rgba(70, 71, 72, 0.582), rgba(52, 68, 138, 0.2));
+    border-radius: 10px;
+}
+                        
+.card {               
+    padding: 15px;
+    background: linear-gradient(328deg, #0c274e, #360808);           
+    border-radius: 10px;
+    position: relative;
+    width: 90%;
+    margin: 15px auto;                                         
+}
+.card h3 {
+    margin-left: 2rem; 
+    font-size: 24px; 
+    font-weight: bold; 
+    color: rgba(255, 255, 255, 0.763);  
+    font-family: sans-serif;
+}
+.card p {
+    color: rgba(255, 255, 255, 0.763);  
+    text-shadow: 0 0 5px red;
+}                     
+.card:hover{
+    box-shadow:0 0 40px  black;
+    transform: scale(1.03); 
+    transition: all 0.3s ease;
+} 
