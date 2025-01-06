@@ -5,8 +5,8 @@ PAGES = {
     "CSV Autoscout24.com": "pages\CSV_Autoscout24.com.py",
     "CSV Cars.com": "pages\CSV_Cars.com.py",
     "Dynamic Arabam.com": "pages\Dynamic_Arabam.com.py",
-    "Dynamic Cars.com": "pages\Dynamic_Cars.com.py",
-    "Dynamic Autoscout24.com": "pages/Dynamic_Autoscout24.com.py"
+    "Dynamic Autoscout24.com": "pages\Dynamic_Autoscout24.com.py",
+    "Dynamic Cars.com": "pages\Dynamic_Cars.com.py"
 }
 
 st.markdown("""

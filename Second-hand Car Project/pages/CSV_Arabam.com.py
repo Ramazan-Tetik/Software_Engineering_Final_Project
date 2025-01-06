@@ -18,6 +18,7 @@ st.markdown("""
     </section>
 </body>    
     """, unsafe_allow_html=True)
+
 if "df" in st.session_state:
     del st.session_state["df"]
 
@@ -25,9 +26,8 @@ if "df" in st.session_state:
 if "df3" in st.session_state:
     del st.session_state["df3"]
     
-
-
-df1 = pd.read_csv("car_info1.csv")
+    
+df1 = pd.read_csv("arabam_Dataset.csv")
 st.session_state["df1"] = df1
 
 #in model dropdown menu,changes models appropriate form before sorting
