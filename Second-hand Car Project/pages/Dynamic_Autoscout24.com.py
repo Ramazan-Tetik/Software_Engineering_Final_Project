@@ -6,7 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import pandas as pd
 from webdriver_manager.chrome import ChromeDriverManager
-from concurrent.futures import ProcessPoolExecutor, as_completed
 import os
 from selenium.webdriver.chrome.options import Options
 import streamlit as st
@@ -18,11 +17,23 @@ service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service,options=options)
 driver.maximize_window()
 
+st.markdown("""
+<body>
+    <section class="home" id="home">
+        <div class="content">
+            <h3></h3>
+            <p></p>
+        </div>
+    </section>
+</body>    
+""", unsafe_allow_html=True)
+
+with open("common.css") as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 website = 'https://www.autoscout24.com/'
 path = f'{website}lst?atype=C&desc=0&page=1&search_id=2554r0bdct&sort=standard&source=listpage_pagination&ustate=N%2CU'
 driver.get(path)
-
 
 def pop_up_accept():
     try:
@@ -35,7 +46,6 @@ def pop_up_accept():
         pass
 pop_up_accept()
 
-
 def pure_number(text):
     pure_text = ''
     for letter in text:
@@ -43,7 +53,6 @@ def pure_number(text):
             letter = ''
         pure_text = letter + pure_text
     return pure_text
-
 
 def find_last_page_num():
 
@@ -75,18 +84,12 @@ def all_car_links(webpage_url):
         all_links = []
     return all_links
 
-
 def split_url_until_find_page_add_powertype(url):
     splitted_url = url.split('&powertype')
     splitted_elements = []
     for element in splitted_url:
         splitted_elements.append(element)
     return splitted_elements
-
-
-
-
-
 
 def scrap_the_page_to_df(url):
     driver.get(url)
@@ -168,8 +171,6 @@ def scrap_the_page_to_df(url):
 
     return df
 
-
-
 #TODO Contstuct selection phase for fuel_type, power , mileage, gearbox: WORKING <<TESTED>>
 def contruct_all_possibilities_for_FPMG(fuel,each_power_from,each_power_to,each_mileage_from,each_mileage_to,gearbox_array):
 
@@ -180,10 +181,6 @@ def contruct_all_possibilities_for_FPMG(fuel,each_power_from,each_power_to,each_
             all_FPMG.append(fpmg)
     return all_FPMG
 
-
-
-
-
 #TODO select brand #TODO select model
 def filtered_form(brand_model,fuel_array, power_from_array,power_to_array ,mileage_from_array,mileage_to_array, gearbox_array):
     all_urls = []
@@ -192,12 +189,6 @@ def filtered_form(brand_model,fuel_array, power_from_array,power_to_array ,milea
         page_url = f'{website}/lst/{brand_model}/?atype=C&cy=D%2CA%2CB%2CE%2CF%2CI%2CL%2CNL&damaged_listing=exclude&desc=0&{fpmg}&powertype=kw&search_id=ppuu00tm4c&sort=standard&source=homepage_search-mask&ustate=N%2CU'
         all_urls.append(page_url)
     return all_urls
-
-
-
-
-
-
 
 #Working <<Tested>>
 def generate_url_for_web(brand,selected_brand_models, country_array):
@@ -244,8 +235,6 @@ def generate_url_for_web(brand,selected_brand_models, country_array):
 
     return all_brand_model_country_array
 
-
-
 #Completed <<WORKING>><<Tested>>
 def brand_model_for_web(wanted_brand):
     page_url = f'{website}/lst/{wanted_brand}?atype=C&cy=D%2CA%2CB%2CE%2CF%2CI%2CL%2CNL&damaged_listing=exclude&desc=0&powertype=kw&search_id=ppuu00tm4c&sort=standard&source=homepage_search-mask&ustate=N%2CU'
@@ -285,10 +274,8 @@ def generate_specific_brand_model_country_url_for_web(brand,selected_models):
         brand_model_array.append(brand_model_text)
     print(f'Brand model array: {brand_model_array}')
 
-
     brand_model_country_urls = generate_url_for_web(brand,brand_model_array, country_array)
     return brand_model_country_urls
-
 
 def fix_car_amount(amount_text):
     try:
@@ -297,8 +284,6 @@ def fix_car_amount(amount_text):
     except:
         return amount_text
     
-
-
 def check_car_amount():
     car_info = WebDriverWait(driver, 20).until(
         EC.visibility_of_element_located(
@@ -308,8 +293,88 @@ def check_car_amount():
     car_amount_text = car_info_text.split(' ')[0]
     return car_amount_text
 
+spinner_css = """
+<style>
+.spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto; 
+}
+.loader {
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    display: flex;
+    justify-content: center;
+    -webkit-box-reflect: below -25px linear-gradient(transparent,#0005);
+    margin-top: 20px;
+    font-size: 3em;
+    color: transparent;
+    text-transform: uppercase;
+    -webkit-text-stroke: 1px black;
+    font-weight: 800;
+}
+.loader span {
+    display: inline-block; 
+    animation: wavy 1s ease-in-out infinite;
+}
+.loader span:nth-child(1) { animation-delay: 0.1s; }
+.loader span:nth-child(2) { animation-delay: 0.2s; }
+.loader span:nth-child(3) { animation-delay: 0.3s; }
+.loader span:nth-child(4) { animation-delay: 0.4s; }
+.loader span:nth-child(5) { animation-delay: 0.5s; }
+.loader span:nth-child(6) { animation-delay: 0.6s; }
+.loader span:nth-child(7) { animation-delay: 0.7s; }
+.loader span:nth-child(8) { animation-delay: 0.8s; }
+.loader span:nth-child(9) { animation-delay: 0.9s; }
+.loader span:nth-child(10) { animation-delay: 1s; }
 
+@keyframes wavy {
+    0% {
+        transform: translateY(0);
+        color: transparent;
+        text-shadow: none;
+    }
+    20% {
+        transform: translateY(-15px); 
+        color: #040d15;
+        text-shadow: 0 0 5px #040d15,
+                     0 0 25px #040d15,
+                     0 0 50px #040d15;
+    }
+    40%, 100% {
+        transform: translateY(0);
+        color: transparent;
+        text-shadow: none;
+    }
+}
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+</style>
+"""
 
+spinner_html = """
+<div class="spinner-container">
+    <div class="loader">
+        <span>L</span>
+        <span>O</span>
+        <span>A</span>
+        <span>D</span>
+        <span>I</span>
+        <span>N</span>
+        <span>G</span>
+        <span>.</span>
+        <span>.</span>
+        <span>.</span>
+    </div>
+</div>
+"""
+if 'loading' not in st.session_state:
+    st.session_state['loading'] = False
 
 #Completed <<Tested>>
 def scrap_page_by_page_web(selected_brands,selected_models,counter,fuel_array, power_from_array, power_to_array, mileage_from_array,mileage_to_array, gearbox_array,status): 
@@ -319,8 +384,7 @@ def scrap_page_by_page_web(selected_brands,selected_models,counter,fuel_array, p
     all_url = []
     for brand_model in brands_models:
         all_url = all_url + filtered_form(brand_model,fuel_array, power_from_array,power_to_array ,mileage_from_array,mileage_to_array, gearbox_array)
-    
-    
+       
     url_index = 0
     for url in all_url:
         if not status:  # Dış döngüyü de durdur
@@ -341,22 +405,15 @@ def scrap_page_by_page_web(selected_brands,selected_models,counter,fuel_array, p
 
             webpage_url = f'{split_elements[0]}&page={page_index}&powertype{split_elements[1]}'
             
-            
-            
             all_car_array_with_0_pages = all_car_links(webpage_url)
-           
 
             all_car_array = all_car_array_with_0_pages[:car_amount]
-            
-            
-            
+
             for each_link in all_car_array:
                 
                 if not status:           
                     break
-                
-                
-
+           
                 df = scrap_the_page_to_df(each_link)
                 
                 try:
@@ -367,12 +424,9 @@ def scrap_page_by_page_web(selected_brands,selected_models,counter,fuel_array, p
                     print(f'Current Page Number -----> {page_index} //// Car ----> {counter}')
                 except:
                     pass                  
-
-                        
-            
+           
         url_index += 1
-             
-    
+                 
     if 'all_df' in st.session_state:
         all_df = st.session_state.all_df
         if isinstance(all_df, list) and len(all_df) > 0:
@@ -380,19 +434,20 @@ def scrap_page_by_page_web(selected_brands,selected_models,counter,fuel_array, p
             combined_df = pd.concat(all_df, ignore_index=True)
             combined_df.to_csv('temp_data.csv', index=False)
             st.session_state.all_df = combined_df 
-
         
         elif isinstance(all_df, pd.DataFrame) and not all_df.empty:
             all_df.to_csv('temp_data.csv', index=False)
         else:
+            st.session_state.loading = False
+            st.markdown(
+            "<style>.spinner-container { display: none; }</style>",
+            unsafe_allow_html=True
+            )  
             st.warning('No car found...')
     
     del st.session_state['all_df']
 
     driver.close()
-     
-
-
 
 def remove_temp_csv(csv_name):
     if os.path.exists(csv_name):
@@ -405,17 +460,12 @@ def display_cards(df):
             f"""                     
                 <span style="color:rgba(95, 15, 15, 0.779); font-weight: bold;">Brand:</span>  {df['brand'].values[0]} 
                 <span style="color:rgba(95, 15, 15, 0.779); font-weight: bold;">Model:</span> {df['model'].values[0]}  
-                <span style="color:rgba(95, 15, 15, 0.779); font-weight: bold;">Price:</span> {df['price'].values[0]}
-                
-                 
-                
+                <span style="color:rgba(95, 15, 15, 0.779); font-weight: bold;">Price:</span> {df['price'].values[0]}            
     """, 
     unsafe_allow_html=True
         )
-        with st.expander(
-            
-            "View Details", expanded=False):
-            
+        with st.expander(          
+            "View Details", expanded=False):           
             st.markdown(f"""   
                 <div class="card">
                     <h3>{df['brand'].values[0]} {df['model'].values[0]}  </h3>
@@ -433,22 +483,6 @@ def display_cards(df):
 
         st.markdown("<hr style='border: 1px solid black; margin: 20px 0;'>", unsafe_allow_html=True)
                 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def find_all_brands_array():
     all_brands_array = []
 
@@ -468,7 +502,6 @@ def find_all_brands_array():
             print(f'Brand: {final_letter_brand}')
             all_brands_array.append(final_letter_brand)
     return all_brands_array
-
 
 def find_all_brand_model_array():
     print('Starting to work!')
@@ -512,7 +545,6 @@ all_brands= ['audi', 'bmw', 'ford', 'mercedes-benz', 'opel', 'volkswagen', 'rena
 'subaru', 'suzuki', 'swm', 'talbot', 'tasso', 'tata', 'tazzari-ev', 'techart', 'tesla', 'togg', 'town-life', 'toyota', 'trabant', 'trailer-anhänger', 'triumph', 'trucks-lkw', 'tvr', 'uaz', 'vanden-plas', 'vanderhall', 
 'vaz', 'vem', 'vinfast', 'volvo', 'voyah', 'wartburg', 'weltmeister', 'wenckstern', 'westfield', 'wey', 'wiesmann', 'xbus', 'xev', 'xpeng', 'zastava', 'zaz', 'zeekr', 'zhidou', 'zotye', 'others']
 
-
 #all_models_array = find_all_brand_model_array()
 #Output of the find_all_brand_model_array
 all_model_for_each_brand = [['100', '200', '50', '80', '90', 'a1', 'a2', 'a3', 'a4', 'a4-allroad', 'a5', 'a6', 'a6-allroad', 'a7', 'a8', 'allroad', 'cabriolet', 'coupe', 'e-tron', 'e-tron-gt', 'q1', 'q2', 'q3', 'q4-e-tron', 'q5', 'q6', 'q7', 'q8', 'q8-e-tron', 'quattro', 'r8', 'rs', 'rs-e-tron-gt', 'rs-q3', 'rs-q5', 'rs-q8', 'rs2', 'rs3', 'rs4', 'rs5', 'rs6', 'rs7', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 'sq2', 'sq3', 'sq5', 'sq6', 'sq7', 'sq8', 'sq8-e-tron', 'tt', 'tt-rs', 'tts', 'v8', 'others'], ['1-series-(all)', '114', '116', '118', '120', '123', '125', '128', '130', '135', '140', '2-series-(all)', '214', '216', '218', '220', '223', '225', '228', '230', '235', '240', '2002', '3-series-(all)', '315', '316', '318', '320', '323', '324', '325', '328', '330', '335', '340', 'active-hybrid-3', '4-series-(all)', '418', '420', '425', '428', '430', '435', '440', '5-series-(all)', '518', '520', '523', '524', '525', '528', '530', '535', '540', '545', '550', 'active-hybrid-5', '6-series-(all)', '620', '628', '630', '633', '635', '640', '645', '650', '7-series-(all)', '725', '728', '730', 
@@ -534,9 +566,6 @@ all_model_for_each_brand = [['100', '200', '50', '80', '90', 'a1', 'a2', 'a3', '
 'xl-7', 'others'], ['g01', 'g01f', 'g03f', 'g05', 'others'], ['alpine', 'horizon', 'matra-murena', 'matra-rancho', 'samba', 'simca-1100', 'simca-1510', 'solar-gl', 'solar-ls', 'solar-ralley', 'solara', 'sunbeam', 'tagora', 'others'], ['bingo', 'c1db', 'c1dm', 'domino', 'hola', 'king', 't2', 't3', 'td', 'others'], ['aria', 'bolt', 'estate', 'harrier', 'hexa', 'indica', 'indigo', 'nano', 'nexon', 'pick-up', 'safari', 'sport', 'sumo', 
 'telcoline', 'telcosport', 'tiago', 'tigor', 'xenon', 'zest', 'others'], ['em1-anniversary', 'em1-citysport', 'zero-city', 'zero-classic', 'zero-em1', 'zero-em2', 'zero-evo', 'zero-junior', 'zero-se', 'zero-special-edition', 'zero-speedster', 'others'], ['others'], ['cybertruck', 'model-3', 'model-s', 'model-x', 'model-y', 'roadster', 'others'], ['t10x', 'others'], ['ginevra', 'helektra', 'others'], ['4-runner', 'allion', 'alphard', 'altezza', 'aristo', 'auris', 'avalon', 'avensis', 'avensis-verso', 'aygo', 'aygo-x', 'bb', 'belta', 'bz4x', 'c-hr', 'caldina', 'cami', 'camry', 'carina', 'celica', 'chaser', 'coaster', 'corolla', 'corolla-cross', 'corolla-verso', 'corona', 'corsa', 'cressida', 'cresta', 'crown', 'duet', 'dyna', 'estima', 'fj-cruiser', 'fj40', 'fortuner', 'fun-cruiser', 'funcargo', 'gaia', 'gr86', 'gt86', 'harrier', 'hdj', 'hiace', 'highlander', 'hilux', 'ipsum', 'iq', 'ist', 'kj', 'land-cruiser', 'land-cruiser-prado', 'lite-ace', 'mark-ii', 'mark-x', 'matrix', 'mirai', 'model-f', 'mr-2', 'nadia', 'noah', 'opa', 'paseo', 'passo', 'pick-up', 'picnic', 'platz', 'premio', 'previa', 'prius', 'prius+', 'proace', 'proace-city', 'ractis', 'raum', 'rav-4', 'sequoia', 'sienna', 'solara', 'sprinter', 'starlet', 'supra', 'tacoma', 'tercel', 'town-ace', 'tundra', 'urban-cruiser', 'venza', 'verossa', 'verso', 'verso-s', 'vista', 'vitz', 'voxy', 'will', 'windom', 'wish', 'yaris', 'yaris-cross', 'others'], ['1.1', 'p50', 'p60', 'p601', 'rallye', 'trabant', 'others'], ['others'], ['dolomite', 'gt6', 'herald', 'moss', 'spitfire', 'stag', 'tr1', 'tr2', 'tr3', 'tr4', 'tr5', 'tr6', 'tr7', 'tr8', 'others'], ['atlas', 'cat', 'citroen', 'daewoo', 'daf', 'deutz-fahr', 'fiat', 'ford', 'fuchs', 'hanomag', 'hitachi', 'iveco', 'iveco-magirus', 'iveco-fiat', 'jungheinrich', 'koegel', 'komatsu', 'ldv', 'liebherr', 'linde', 'man', 'mercedes-benz', 'mitsubishi', 'multicar', 'neoplan', 'nissan', 'o-&-k', 'peugeot', 'renault', 'scania', 'schaeff', 'setra', 'volvo', 'vw', 'zeppelin', 'zettelmeyer', 'others'], ['cerbera', 'chimaera', 'grantura', 'griffith', 's-2,8', 's2', 's3', 's4', 'sagaris', 't350', 'tamora', 'tuscan', 'v8s', 'others'], ['2206', '2315', '3151', '3153', '3159', '3160', '3162', '3303', '3692', '3909', '3962', '469', 'buchanka', 'classic', 'dakar', 'farmer', 'hunter', 'patriot', 'pickup', 'profi', 'tigr', 'trofi', 'others'], ['armstrong', 'princess', 'others'], ['carmel', 'edison-2', 'edison-4', 'venice', 'venice-r', 'venice-speedster', 'venice-speedster-r', 'others'], ['1111', '11113', '11118', '1113', '1117', '1118', '1119', '1706', '1922', '2016', '2101', '21011', '21013', 
 '2102', '2103', '21033', '2104', '21043', '21045', '21046', '21047', '2105', '21051', '21053', '2106', '21060', '21061', '21063', '21065', '2107', '21073', '21074', '2108', '21081', '21083', '21086', '2109', '21091', '21093', '21096', '21099', '2110', '21101', '21102', '21103', '21104', '21106', '21108', '2111', '21111', '21112', '21113', '21114', '2112', '21120', '21121', '21122', '21123', '21124', '2113', '21130', '2114', '21140', '2115', '21150', '21150i', '2120', '2121', '21213', '21214', '21218', '212180', '2123', '2129', '2131', '21312', '2170', '2199', '2328', '2329', '2364', 'roadster', 'others'], ['cargo', 'cover', 'double', 'multi', 'open', 'people', 'ribaltabile', 'others'], ['vf-6', 'vf-7', 'vf-8', 'vf-9', 'others'], ['240', '244', '245', '262', '264', '265', '340', '360', '440', '460', '480', '740', '744', '745', '760', '764', '780', '850', '855', '940', '944', '945', '960', '965', 'amazon', 'c30', 'c40', 'c70', 'ec40', 'ex30', 'ex40', 'ex90', 'p1800', 'polar', 'pv544', 's40', 's60', 's60-cross-country', 's70', 's80', 's90', 'v40', 'v40-cross-country', 'v50', 'v60', 'v60-cross-country', 'v70', 'v90', 'v90-cross-country', 'xc40', 'xc60', 'xc70', 'xc90', 'others'], ['dream', 'free', 'passion', 'others'], ['1.3', '1.6', '1000', '311', '312', '313', '353', 'barkas', 'framo', 'ifa-f9', 'wartburg', 'others'], ['ex5-z', 'ex6-plus', 'w6', 'others'], ['full-custom', 'standard', 'standard-custom', 'others'], ['7se', 'fw400', 'megablade', 'megabusa', 'megas2000', 'sdv', 'se', 'sei', 'seight', 'sport', 'sport-turbo', 'xi', 'xtr2', 'xtr4', 'others'], ['coffee-01', 'coffee-02', 'others'], ['gecko', 'mf-28', 'mf-3', 'mf-30', 'mf-4', 'mf-5', 'others'], ['bus', 'others'], ['kitty', 'yoyo', 'others'], ['g3i', 'g9', 'p5', 'p7', 'others'], ['10', '101', '1100-tf', '125-pz', '128', '1300', '600', '750', '850', '850-ak', '900-ak', 'koral', 'skala', 'yugo', 'others'], ['1102', '1103', '1105', 'chance', 'forza', 'lanos', 'sens', 'vida', 'others'], ['001', 'x', 'others'], ['d1', 'd2', 'd3', 'kwb', 'others'], ['e200', 't300', 't600', 't700', 'traum-meet-3', 'traum-s70', 'traum-seek-5', 'z100', 'z360', 'z700', 'others'], ['aiways', 'amc', 'apal', 'aro', 'asia', 'auverland', 'barkas', 'bertone', 'bilenkin-classic-cars', 'binz', 'bitter', 'bm-grupa', 'british-leyland', 'burton', 'can-am', 'canta', 'carver', 'china-automobile', 'cmc', 'continental', 'cord', 'courb', 'datsun-go', 'de-lorean', 'derways', 'edrive', 'effedi-maranello', 'excalibur', 'fso', 'fun-tech', 'geely', 'genesis', 'ginetta', 'grandin-dallas', 'gumpert', 'hartge', 'hdpic', 'hobbycar', 'holden', 'ihc', 'indimo', 'iseki', 'italcar', 'jac', 'jdm', 'jiayuan', 'karabag', 'keinath', 'kit-cars', 'la-forza', 'landwind', 'loremo', 'marcos', 'melkus', 'mercury', 'mia', 'monteverdi', 'morris', 'mosler', 'nio', 'noble', 'polaris', 'qoros', 'quadix', 'qvale', 'radical', 'reva', 'rimac', 'romeo-ferraris', 'saleen', 'sam', 'savel', 'scheelen', 'scion', 'sdg', 'shandong', 'tagaz', 'teener', 'think-city', 'tiger', 'tramontana', 'trax', 'turner', 'van-diemen', 'vauxhall', 'venturi', 'vm', 'vortex', 'wallys', 'weineck', 'wenckstern', 'xev', 'yes!', 'zenvo', 'others']]
-
-
-
 
 def brand_index_finder(selected_brand,all_brands):
     all_indices = []  
@@ -564,8 +593,6 @@ def find_selected_brands_models_for_selection(selected_brand,all_models):
             all_models_array.append(model)
     return all_models_array
 
-
-
 def sorting_model_brand_selections(selected_brand,selected_model,all_model_for_each_brand,all_brands):
     all_brand_indices = brand_index_finder(selected_brand,all_brands)
     all_brand_model_patterns = []
@@ -575,8 +602,6 @@ def sorting_model_brand_selections(selected_brand,selected_model,all_model_for_e
                 all_brand_model_patterns.append(f'{all_brands[brand_index]}/{each_selected_model}')
             
     return all_brand_model_patterns
-
-
 
 all_fuel_options = ['Hybrid(Electric/Gasoline)','Hybrid(Electric/Diesel)','Gasoline','CNG','Diesel','Electric','Hydrogen','LPG','Ethanol','Others']
 
@@ -593,8 +618,7 @@ def update_selection_for_fuel(picked_types):
         'LPG' :  'L',
         'Ethanol' : 'M',
         'Others' : 'O' 
-    }
-    
+    }   
     for each_picked in picked_types:       
         for fuel_type in all_fuel_type:
             if each_picked == fuel_type:
@@ -616,8 +640,6 @@ def update_selection_for_gearbox(picked_types):
                 all_url_versions.append(all_gear[each_picked])
     return  all_url_versions    
 
-
-
 def find_mileage_and_power():
     all_mileage = []
     time.sleep(1)
@@ -638,6 +660,34 @@ def find_mileage_and_power():
 
     return all_mileage
 
+def add_to_all_df(all_filtrations,current_filtration):
+    if check_empty_filtrations(current_filtration): 
+        if current_filtration in all_filtrations:
+            all_filtrations.remove(current_filtration)
+        all_filtrations.append(current_filtration)
+
+#Shows the previous filtrations
+def find_prev_filtration(all_filtrations,current_filtration,system_index):
+    if check_empty_filtrations(current_filtration): 
+        if system_index != 0 and system_index != 1:
+            return all_filtrations[system_index - 2]
+        
+def is_changed(prev_filtration,current_filtration,system_index):
+   
+    if system_index != 0 and system_index != 1 :
+        if current_filtration == prev_filtration:
+            return False
+        else: 
+            return True
+
+#This functions controls the filtrations are they empyt or not.
+def check_empty_filtrations(filtration):
+    for index in range(len(filtration)):
+        if filtration[index] == '' or filtration[index] == []: 
+            return False
+        elif index == len(filtration) - 1 and filtration[index] != []:       
+            return True
+   
 mileage_and_power_options = ['', '2500', '5000', '10000', '20000', '30000', '40000', '50000', '60000', '70000', '80000', '90000', '100000', '125000', '150000', '175000', '200000']
 
 def is_empty(selection_name):
@@ -662,75 +712,18 @@ selected_mileage_to = st.sidebar.selectbox('Select mileage to', mileage_and_powe
 selected_power_from = st.sidebar.text_input('Select power from')
 selected_power_to = st.sidebar.text_input('Select power to')
 
-
 all_selected_filtrations = [selected_brands,selected_models,selected_fuel_types,selected_gearbox,selected_mileage_to,selected_power_from,selected_power_to]
-if 'run_count' not in st.session_state:
-    st.session_state.run_count = 0  
-
-#This is for to calculate the amount of same filtration usage
-if 'button_counter' not in st.session_state:
-    st.session_state.button_counter = 0  
-
-
-
-
-
-
-def prev_filtrations(current_filtration,all_filtrations, index):
-
-    if index == 0:
-        return current_filtration
-    else:
-        return all_filtrations[index - 1]
-
-#Shows the previous filtrations
-def find_prev_filtration(all_filtrations,current_filtration,system_index):
-    if check_empty_filtrations(current_filtration): 
-        all_filtrations.append(current_filtration)
-        
-        if system_index != 0:
-            return all_filtrations[system_index - 1]
-        
-def is_changed(prev_filtration,current_filtration,system_index):
-    
-    if system_index != 0:
-        if current_filtration == prev_filtration:
-            return False
-        else: 
-            return True
-
-
-
-
-
-#This functions controls the filtrations are they empyt or not.
-def check_empty_filtrations(filtration):
-    for index in range(len(filtration)):
-        if filtration[index] == '' or filtration[index] == []: 
-            return False
-        elif index == len(filtration) - 1 and filtration[index] != []:       
-            return True
-   
-
-
-
-filtration_names = ['Brand', 'Model', 'Fuel Type', 'Gearbox', 'Mileage To', 'Power From', 'Power To']
 
 if 'filtration_completed' not in st.session_state:
     st.session_state['filtration_completed'] = False
 
 #This code block controls the counter of the page
 st.session_state['filtration_completed'] = check_empty_filtrations(all_selected_filtrations)
-if st.session_state['filtration_completed'] == True:
-    st.session_state.run_count += 1
 
+if 'status' not in st.session_state:
+    st.session_state['status'] = False
 
-
-
-
-
-
-
+filtration_names = ['Brand', 'Model', 'Fuel Type', 'Gearbox', 'Mileage To', 'Power From', 'Power To']
 selection_index = 0
 for selections in all_selected_filtrations:
     if is_empty(selections) == True:
@@ -741,62 +734,67 @@ for selections in all_selected_filtrations:
         st.session_state['filtration_completed'] = True
     selection_index += 1
 
+add_to_all_df(st.session_state.all_filtrations,all_selected_filtrations)
 
+if is_changed(find_prev_filtration(st.session_state.all_filtrations,all_selected_filtrations,len(st.session_state.all_filtrations)),all_selected_filtrations,len(st.session_state.all_filtrations)) == True:
+    
+    #st.session_state['status'] = False
+    if 'rerun_in_progress' not in st.session_state:
+        st.session_state['rerun_in_progress'] = True  
+        st.warning('Please wait...')
+        st.session_state['status'] = False
+        st.rerun()   
+    else:
+        st.session_state['rerun_in_progress'] = False  
 
-
-if 'status' not in st.session_state:
-    st.session_state['status'] = False
-
-
-
-
-if st.sidebar.button('Start Scrapping'):
+if st.sidebar.button('Start Scraping'):
     if st.session_state['filtration_completed'] == False:
         st.warning('Please complete the filtration!')
-    
-    st.session_state['status'] = True
-    
+    else:
+        st.session_state['status'] = True
+        st.session_state['loading'] = True  
+        st.markdown(spinner_css, unsafe_allow_html=True)  
+        st.markdown(spinner_html, unsafe_allow_html=True)  
 
-
+if 'data_scraped' not in st.session_state:
+    st.session_state['data_scraped'] = False
 
 if st.session_state['status'] == True and st.session_state['filtration_completed'] == True:
     
-   
-    if st.sidebar.button('Stop'):
+    if st.sidebar.button('Stop / Finish'):
         st.session_state['status'] = False
-    st.session_state.button_counter += 1    
-
-    
-
-    process_with_specific_filtrations_counter = int(st.session_state.run_count) - int(st.session_state.button_counter)
-
-    
-    
+        st.session_state['loading'] = False  
+        st.markdown("<style>.spinner-container { display: none; }</style>", unsafe_allow_html=True)
+        
     remove_temp_csv('temp_data.csv')
     
-    
+    if st.session_state['status'] == True:
+        st.warning('Process Started...')
 
     scrap_page_by_page_web(selected_brands,selected_models,0,url_type_fuel, selected_power_from, selected_power_to, selected_mileage_from,selected_mileage_to, url_type_gear,st.session_state['status'])
     
-    
-    
-    if is_changed(find_prev_filtration(st.session_state.all_filtrations,all_selected_filtrations,process_with_specific_filtrations_counter),all_selected_filtrations,process_with_specific_filtrations_counter) == True:
-        st.rerun()
-    
-
     if st.session_state['status'] == False:
+        st.session_state['loading'] = False  # Animasyonu durdur
+        st.markdown("<style>.spinner-container { display: none; }</style>", unsafe_allow_html=True)
         try:          
             for index, row in pd.read_csv('temp_data.csv').iterrows():
                 df = pd.DataFrame([row])
                 st.write(display_cards(df))
+                
         except:
             pass
+           
+    if os.path.isfile('temp_data.csv'):
+        st.session_state['data_scraped'] = True
+        st.warning('Scraping Completed!...')
+    else:
+        st.session_state['data_scraped'] = False
 
-
-
-    
-    
-    
-
-
-      
+    if st.session_state['data_scraped'] == True:
+        with open('temp_data.csv', "rb") as file:
+            st.download_button(
+                label="Download CSV",         
+                data=file,                    
+                file_name="Filtered_Data.csv",    
+                mime="text/csv"               
+            )
