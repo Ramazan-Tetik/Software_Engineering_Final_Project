@@ -24,6 +24,12 @@ league_logos = {
 background_images = {
     "France": os.path.join(project_root, "logos", "france-background.jpeg"),
     "Germany": os.path.join(project_root,  "logos", "germany_background.jpeg"),
+    "Spain": os.path.join(project_root,  "logos","Designer (22).jpeg"),
+    "Italy": os.path.join(project_root,  "logos","Designer (21).jpeg"),
+    "Turkey": os.path.join(project_root,  "logos","turkey.jpeg"),
+    "England": os.path.join(project_root,  "logos" ,"Designer (18).jpeg"),
+    
+    
     "default": os.path.join(project_root, "background.jpeg")
 }
 def get_base64_image(image_path):
