@@ -279,7 +279,15 @@ def select_year(driver,year):
             results_button = driver.find_element(By.XPATH, '//*[@id="li2"]')
             results_button.click()
             time.sleep(2)
-            break            
+        else:
+            year = year.split('/')[-1]
+            if year == archive_season_links[i].text.strip().split(' ')[-1]:
+                print(f'sene:{year}')
+                archive_season_links[i].click()
+                results_button = driver.find_element(By.XPATH, '//*[@id="li2"]')
+                results_button.click()
+                time.sleep(2)   
+                break            
 
 
 # In[8]:
