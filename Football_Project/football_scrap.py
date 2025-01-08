@@ -284,18 +284,21 @@ def select_year(driver,year):
             break
 
     if counter == 1:
+        year = year.split('/')[-2]
         for i in range(len(archive_season_links)):
-            print(archive_season_links[i].text.strip().split(' ')[-1])
-            year = year.split('/')[-1]
-            print('donen sene')
-            print(year)
+            print('test edilen sene',archive_season_links[i].text.strip().split(' ')[-1])
+            print('aranan sene: ',year)
             if year == archive_season_links[i].text.strip().split(' ')[-1]:
                 print(f'sene:{year}')
                 archive_season_links[i].click()
                 results_button = driver.find_element(By.XPATH, '//*[@id="li2"]')
                 results_button.click()
                 time.sleep(2)
-                break   
+                counter = 2
+                break
+    if counter == 1:
+        archive_season_links[0].click()
+    
 
 
 # In[8]:
