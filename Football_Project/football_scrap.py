@@ -268,26 +268,34 @@ def scrap(country_link_name, leagues, years):
 
 
 def select_year(driver,year):
-    print('located location : select_year')
+    counter = 1
     archive_button = WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="li5"]')))
     archive_button.click()
     archive_season_links = driver.find_elements(By.XPATH, '//div[@class="archive__season"]/a')
+    print('-------------------------------------------------------------------------')
     for i in range(len(archive_season_links)):
         if year == archive_season_links[i].text.strip().split(' ')[-1]:
+            counter = 0
             print(f'sene:{year}')
             archive_season_links[i].click()
             results_button = driver.find_element(By.XPATH, '//*[@id="li2"]')
             results_button.click()
             time.sleep(2)
-        else:
+            break
+
+    if counter == 1:
+        for i in range(len(archive_season_links)):
+            print(archive_season_links[i].text.strip().split(' ')[-1])
             year = year.split('/')[-1]
+            print('donen sene')
+            print(year)
             if year == archive_season_links[i].text.strip().split(' ')[-1]:
                 print(f'sene:{year}')
                 archive_season_links[i].click()
                 results_button = driver.find_element(By.XPATH, '//*[@id="li2"]')
                 results_button.click()
-                time.sleep(2)   
-                break            
+                time.sleep(2)
+                break   
 
 
 # In[8]:
