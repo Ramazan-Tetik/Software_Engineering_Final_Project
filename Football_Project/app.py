@@ -203,7 +203,8 @@ data_source = st.sidebar.selectbox("Select Data Source:", ["Select", "CSV", "Eth
 
 if data_source == "CSV":
     try:
-        csv_path = os.path.join(project_root, "Football.csv")
+        csv_path = os.path.join(project_root, "Football.csv",)
+    
         data = load_data_from_csv(csv_path)
         if data is not None:
             countries = ["Select"] + list(data['Country'].unique())
@@ -211,11 +212,6 @@ if data_source == "CSV":
 
             show_results_enabled = True
             
-            if selected_country != "Select":
-                set_background_image(background_images[selected_country])
-            else:
-                set_background_image(background_images["default"])
-
             if selected_country != "Select":
                 leagues = ["Select"] + ["All Leagues"] + list(data[data['Country'] == selected_country]['League'].unique())
                 selected_league = st.sidebar.selectbox("Select League:", leagues, key="league_selectbox")
