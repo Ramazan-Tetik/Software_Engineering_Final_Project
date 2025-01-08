@@ -296,10 +296,6 @@ def select_year(driver,year):
                 time.sleep(2)
                 counter = 2
                 break
-    if counter == 1:
-        archive_season_links[0].click()
-    
-
 
 # In[8]:
 
