@@ -154,54 +154,7 @@ def load_data_from_csv(file_path):
     except FileNotFoundError:
         return None
 
-# def fetch_and_display_data(country, league, year, data):
-#     placeholder = st.empty()
-#     with placeholder:
-#         st.markdown("<h2>Fetching data...</h2>", unsafe_allow_html=True)
 
-#     if country != "Select" and league != "Select":
-#         try:
-#             leagues_list = [league] if league != "All Leagues" else list(data[data['Country'] == country]['League'].unique())
-#             years_list = [year] if year != "Select" else [str(y) for y in range(2023, 2009, -1)]
-
-#             country_url = country.lower()
-#             scrap(country_url, leagues_list, years_list)
-
-#             time.sleep(5)  # Daha uzun bekleme süresi
-
-#             for league in leagues_list:
-#                 league_formatted = league.lower().replace(' ', '_').replace('.', '')
-#                 csv_filename = f"football_data_{country_url}_{league_formatted}.csv"
-#                 full_path = os.path.join(os.getcwd(), csv_filename)
-
-#                 if os.path.exists(full_path):
-#                     display_scraped_data(full_path, league)
-#                 else:
-#                     st.warning(f"CSV file not found for {league}: {csv_filename}")
-#                     st.error("No data was fetched. Please check the scraping process.")
-#         except Exception as e:
-#             st.error(f"An error occurred while scraping data: {str(e)}")
-
-# def display_scraped_data(file_path, league):
-#     scraped_data = pd.read_csv(file_path)
-#     if not scraped_data.empty:
-#         # Replace missing data placeholder
-#         scraped_data.replace('Data not collected', 'Erişilemedi', inplace=True)
-
-#         st.success(f"Data fetched successfully for {league}!")
-#         st.markdown(f"""
-#             <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.5); color: #FFFFFF;">
-#             <h2 style="text-align: center; color: #FFD700;">Match Data for {league}</h2>
-#             </div>
-#         """, unsafe_allow_html=True)
-#         st.dataframe(scraped_data)
-        
-#         csv = scraped_data.to_csv(index=False)
-#         b64 = base64.b64encode(csv.encode()).decode()
-#         href = f'<a href="data:file/csv;base64,{b64}" download="{league}.csv"><button style="background-color: #FFD700; color: black; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s; margin-top: 20px;">Download CSV</button></a>'
-#         st.markdown(href, unsafe_allow_html=True)
-#     else:
-#         st.warning(f"No data found for {league}. Please check the scraping process.")
 
 set_background_image(background_images["default"])
 data_source = st.sidebar.selectbox("Select Data Source:", ["Select", "CSV", "Ethernet"])
