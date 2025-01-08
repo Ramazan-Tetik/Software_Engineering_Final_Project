@@ -203,18 +203,23 @@ data_source = st.sidebar.selectbox("Select Data Source:", ["Select", "CSV", "Eth
 
 if data_source == "CSV":
     try:
-        csv_path = os.path.join(project_root, "Football.csv",)
-    
+        csv_path = os.path.join(project_root, "Football.csv")
         data = load_data_from_csv(csv_path)
         if data is not None:
             countries = ["Select"] + list(data['Country'].unique())
-            selected_country = st.sidebar.selectbox("Select Country:", countries, key="country_selectbox")
+            selected_country = st.sidebar.selectbox("Select Country:", countries)
 
             show_results_enabled = True
-            
+                        
+            if selected_country != "Select":
+                set_background_image(background_images[selected_country])
+            else:
+                set_background_image(background_images["default"])
+
+
             if selected_country != "Select":
                 leagues = ["Select"] + ["All Leagues"] + list(data[data['Country'] == selected_country]['League'].unique())
-                selected_league = st.sidebar.selectbox("Select League:", leagues, key="league_selectbox")
+                selected_league = st.sidebar.selectbox("Select League:", leagues)
 
                 if selected_league != "Select":
                     if selected_league != "All Leagues":
@@ -222,7 +227,7 @@ if data_source == "CSV":
                     else:
                         years = ["All Seasons"] + list(data[(data["Country"] == selected_country)]['season_year'].unique())
                         
-                    selected_year = st.sidebar.multiselect("Select Season:", years, default=[], key="year_multiselect")
+                    selected_year = st.sidebar.multiselect("Select Season:", years, default=[])
 
                     
 
@@ -374,48 +379,46 @@ elif data_source == "Ethernet":
         ligler_dict = {country: list(data[data['Country'] == country]['League'].unique()) for country in ulkeler[1:]}  # Ligleri CSV'den al
 
         # Kullanıcıdan seçim al
-        secilen_ulke = st.sidebar.selectbox("Ülke Seçin", ulkeler, key="secilen_ulke")  # Benzersiz anahtar eklendi
+        secilen_ulke = st.sidebar.selectbox("Select Country", ulkeler, key="secilen_ulke")  # Benzersiz anahtar eklendi
         if secilen_ulke != "Select":
-            secilen_lig = st.sidebar.selectbox("Lig Seçin", ligler_dict.get(secilen_ulke, []), key="secilen_lig")  # Benzersiz anahtar eklendi
-            secilen_yil = st.sidebar.selectbox("Yıl Seçin", list(range(2000, 2025)), key="secilen_yil")  # Benzersiz anahtar eklendi
-            butona_basildi = st.sidebar.button("Veriyi Çek")  # Sol tarafta buton
+            secilen_lig = st.sidebar.selectbox("Select League", ligler_dict.get(secilen_ulke, []), key="secilen_lig")  # Benzersiz anahtar eklendi
+            secilen_yil = st.sidebar.selectbox("Select Year", list(range(2000, 2025)), key="secilen_yil")  # Benzersiz anahtar eklendi
+            butona_basildi = st.sidebar.button("Fetch Data")  # Sol tarafta buton
             if butona_basildi:
                 # Kullanıcı bilgilerini yazdır
                 st.markdown(f"""
                 <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.7); color: #FFD700; text-align: center;">
-                    <h2>Veri Çekiliyor..İşlem birkaç dakika sürebilir.</h2>
-                    <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} yılı için veri çekiliyor...</p>
+                    <h2>Data Fetching..The process may take a few minutes.</h2>
+                    <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} for years data fetching.</p>
                 </div>
                 """, unsafe_allow_html=True)
 
-                with st.spinner("Yükleniyor..."):
+                with st.spinner("Loading..."):
                     try:
                         # Veri çekme işlemi
                         df = scrap(secilen_ulke, [secilen_lig], [f"{secilen_yil}/{secilen_yil + 1}"])
                         if df is None:
-                            st.error("Veri çekme işlemi başarısız oldu. Lütfen parametreleri kontrol edin.")
+                            st.error("Data extraction failed. Please check the parameters.")
                         else:
                             # Tasarım mesajı
                             st.markdown(f"""
                             <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.7); color: #FFD700; text-align: center;">
-                                <h2>Veri Çekiliyor...</h2>
-                                <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} yılı için veri çekiliyor...</p>
+                                <h2>Data Fetching</h2>
+                                <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} for years data fetching....</p>
                             </div>
                             """, unsafe_allow_html=True)
 
                             # Çekilen veriyi göster
-                            st.write("Çekilen Veri:")
+                            st.write("Fetch Data:")
                             st.dataframe(df)
 
                             # İstatistikleri görselleştirme
                             # ... existing visualization code ...
 
                             csv = df.to_csv(index=False).encode("utf-8")
-                            st.download_button("Veriyi İndir", data=csv, file_name="veri.csv", mime="text/csv")
+                            st.download_button("Download Data", data=csv, file_name="veri.csv", mime="text/csv")
                             # CSV dosyası olarak indirme seçeneği sun
                     except Exception as e:
                         st.error(f"Bir hata oluştu: {str(e)}")
     else:
         st.error("CSV dosyası yüklenemedi. Lütfen dosyanın mevcut olduğundan emin olun.")
-        
-  
