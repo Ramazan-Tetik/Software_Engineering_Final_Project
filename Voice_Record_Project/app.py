@@ -46,7 +46,7 @@ st.markdown(background_css, unsafe_allow_html=True)
 
 def record_audio(duration):
     st.write("Voice Recording started...")
-    recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2, dtype='float64')
+    recording = sd.rec(int(duration * 44100), samplerate=44100, channels=1, dtype='float64')
     return recording
 
 
@@ -59,7 +59,7 @@ def stop_audio():
 def save_audio(filename, data):
     wav_file = filename + ".wav"
     wf = wave.open(wav_file, 'wb')
-    wf.setnchannels(2)
+    wf.setnchannels(1)
     wf.setsampwidth(2)
     wf.setframerate(44100)
     wf.writeframes(b''.join(np.int16(data * 32767)))
