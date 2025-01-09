@@ -4,20 +4,11 @@ import numpy as np
 import pandas as pd
 import wave
 import os
-from pydub import AudioSegment
 import time
 import base64
 from datetime import datetime
 import zipfile
 
-project_root = os.getcwd()
-ffmpeg_path = os.path.join(project_root, "ffmpeg", "ffmpeg-7.1-essentials_build", "ffmpeg-7.1-essentials_build", "bin", "ffmpeg.exe")
-ffmpeg_path = ffmpeg_path.replace("\\", "/")
-
-AudioSegment.converter = ffmpeg_path
-
-if AudioSegment.converter is None:
-    st.error("FFmpeg bulunamadı.")
     
 def get_base64_of_image(image_path):
     absolute_path = os.path.join(os.getcwd(), image_path)
@@ -52,14 +43,17 @@ background_css = f'''
 
 st.markdown(background_css, unsafe_allow_html=True)
 
+
 def record_audio(duration):
     st.write("Voice Recording started...")
     recording = sd.rec(int(duration * 44100), samplerate=44100, channels=2, dtype='float64')
     return recording
 
 
+
 def stop_audio():
     sd.stop()
+
 
 
 def save_audio(filename, data):
@@ -71,16 +65,12 @@ def save_audio(filename, data):
     wf.writeframes(b''.join(np.int16(data * 32767)))
     wf.close()
     
-    mp3_file = filename + ".mp3"
-    sound = AudioSegment.from_wav(wav_file)
-    sound.export(mp3_file, format="mp3")
+    return wav_file
 
-    os.remove(wav_file)
-    
-    return mp3_file
 
-def save_to_csv(name, filepath, created_by, language, user_type):
-    data = {"Name": [name], "File_Path": [filepath], "CreatedBy": [created_by], "Language": [language], "User_Type" : [user_type]} 
+
+def save_to_csv(name,gender, filepath, created_by, language, user_type):
+    data = {"Name": [name], "Gender" : [gender], "File_Path": [filepath], "CreatedBy": [created_by], "Language": [language], "User_Type" : [user_type]} 
     df = pd.DataFrame(data)
 
     if not os.path.isfile('Voice_Records.csv'):
@@ -89,12 +79,14 @@ def save_to_csv(name, filepath, created_by, language, user_type):
         df.to_csv('Voice_Records.csv', mode='a', header=False, index=False)
 
 
-def check_existing_record(name, created_by, language):
+
+def check_existing_record(name,gender ,created_by, language):
     if os.path.isfile('Voice_Records.csv'):
         df = pd.read_csv('Voice_Records.csv')
-        filtered_df = df[(df['Name'] == name) & (df['CreatedBy'] == created_by) & (df['Language'] == language)]
+        filtered_df = df[(df['Name'] == name) & (df['Gender'] == gender) & (df['CreatedBy'] == created_by) & (df['Language'] == language)]
         return not filtered_df.empty
     return False
+
 
 
 def record_page():
@@ -119,12 +111,15 @@ def record_page():
     st.markdown('<h1 class="big-title">Voice Recording Application</h1>', unsafe_allow_html=True)
 
     creators_list =  ["Select"] + ["Ahmet Yasin Aydın", "Ramazan Tetik", "Dilan Nihadioğlu", "Gökhan Ergül", "Ahmet Muhammed Aydın", 
-                     "Nihat Kepkan", "Burak Cankurt", "Azime Şimşek", "Esra Aydın", "Sadık Can Barut", "Ali Kaynakçı", "Other"]
+                     "Burak Cankurt", "Azime Şimşek", "Esra Aydın", "Sadık Can Barut", "Ali Kaynakçı", "Other"]
     language_list = ["Select", "Turkish", "English"]
 
     created_by = st.selectbox("Recording person:", creators_list)
     if created_by == "Other":
         other_person = st.text_input("Please Enter Your Name: ")
+    
+    genders = ["Select"] + ["Male" , "Female"]
+    user_gender = st.selectbox("Select Your Gender : " , genders)
     language = st.selectbox("Select Language:", language_list)
     word = st.text_input("Enter the word:")
     name = word.strip()
@@ -152,14 +147,16 @@ def record_page():
         st.session_state['recording'] = False
         st.session_state['start_time'] = None
         st.session_state['stop_requested'] = False
+        st.session_state['refresh_allowed'] = True 
 
     if st.button("Start recording") and not st.session_state['recording']:
-        if check_existing_record(name, created_by, language):
+        if check_existing_record(name,user_gender ,created_by, language):
             st.warning(f"The record for **{name}** by **{created_by}** in **{language}** already exists.")
         else:
             st.session_state['recording'] = True
             st.session_state['start_time'] = time.time()
             st.session_state['stop_requested'] = False
+            st.session_state['refresh_allowed'] = True 
             st.session_state['recorded_data'] = record_audio(max_duration)
 
 
@@ -177,20 +174,25 @@ def record_page():
 
             if not os.path.exists('Voice_Records'):
                 os.makedirs('Voice_Records')
-
-            filepath = os.path.join('Voice_Records', f"{name}_audio")
+            current_date = datetime.now().strftime('%Y%m%d_%H%M%S')
+            filepath = os.path.join('Voice_Records', f"{name}_{current_date}_audio")
             mp3_filepath = save_audio(filepath, recorded_data)
             
-            save_to_csv(name, mp3_filepath, created_by, language, user_type)
+            save_to_csv(name, user_gender , mp3_filepath, created_by, language, user_type)
             st.success(f"Recording saved successfully as {mp3_filepath}")
+            st.session_state['refresh_allowed'] = False 
 
         if remaining_time <= 0 and not st.session_state['stop_requested']:
             stop_audio()
             st.session_state['recording'] = False
             st.warning("Time is up! The recording was stopped automatically and was not saved.")
-
-        time.sleep(1)
-        st.rerun()
+            st.session_state['refresh_allowed'] = False 
+        
+        if st.session_state['refresh_allowed'] and elapsed_time < 5 :
+            time.sleep(1)
+            st.rerun()
+      
+     
            
 
 def delete_record(file_path, df, index):
@@ -208,6 +210,7 @@ def delete_record(file_path, df, index):
 
     except PermissionError:
         st.error(f"PermissionError: {file_path} is in use by another process.")
+
 
 
 def playback_page():
@@ -250,7 +253,7 @@ def playback_page():
     st.markdown('<h1 class="big-title">Voice Recording Application</h1>', unsafe_allow_html=True)
 
     creators_list_playback =  ["Select"] + ["Ahmet Yasin Aydın", "Ramazan Tetik", "Dilan Nihadioğlu", 
-                          "Gökhan Ergül", "Ahmet Muhammed Aydın", "Nihat Kepkan", 
+                          "Gökhan Ergül", "Ahmet Muhammed Aydın",
                           "Burak Cankurt", "Azime Şimşek", "Esra Aydın", 
                           "Sadık Can Barut", "Ali Kaynakçı", "Other"]
 
@@ -282,16 +285,17 @@ def playback_page():
                         f'download="filtered_records.zip" class="download-button">Download Filtered Records</a>',
                         unsafe_allow_html=True
                     )
-                
-                st.write(f"### **RECORDED BY:** {row['CreatedBy'].upper()}")
-                st.write(f"### **USER TYPE:** {row['User_Type'].upper()}")
+                    
+                st.write(f"### **RECORDED BY:** {creator_playback.upper()}")
+                st.write(f"### **USER TYPE:** {filtered_df.iloc[0]['User_Type'].upper()}")
+
                 for index, row in filtered_df.iterrows():
                     st.write(f"**Word:** {row['Name']}")
 
                     if os.path.exists(row['File_Path']):
                         with open(row['File_Path'], 'rb') as audio_file:
                             audio_bytes = audio_file.read()
-                            st.audio(audio_bytes, format='audio/mp3')
+                            st.audio(audio_bytes, format='audio/wav')
                         st.write(f"**Language:** {row['Language']}")
                         timestamp = os.path.getmtime(row['File_Path'])
                         registration_date = datetime.fromtimestamp(timestamp).strftime('%m/%d/%Y %H:%M')
@@ -299,8 +303,45 @@ def playback_page():
                     else:
                         st.warning(f"File not found: {row['File_Path']}")
 
-                    if st.button(f"Delete Record: {row['Name']}", key=f"delete_{index}"):
-                        delete_record(row['File_Path'], df, index)
+                    col1, col2 = st.columns([1, 1])
+                    
+                    with col1:
+                        if st.button(f"Delete Record: {row['Name']}", key=f"delete_{index}"):
+                            delete_record(row['File_Path'], df, index)
+
+                    with col2:
+                        if st.button(f"Edit Record: {row['Name']}", key=f"edit_{index}"):
+                            st.session_state[f"editing_{index}"] = True
+
+                    if st.session_state.get(f"editing_{index}", False):
+                        new_name = st.text_input(f"Update Name for {row['Name']}", value=row['Name'], key=f"new_name_{index}")
+                        current_date = datetime.now().strftime('%Y%m%d_%H%M%S')
+                        new_filepath = os.path.join('Voice_Records', f"{new_name}_{current_date}_audio")
+                        new_language = st.selectbox("Update  Language:", language_list_playback, key="language_update")
+
+                        col3, col4 = st.columns([1, 1])
+                        with col3:
+                            if st.button(f"Update: {row['Name']}", key=f"update_{index}"):
+                                old_filepath = row['File_Path']  
+                                new_filepath = os.path.join('Voice_Records', f"{new_name}_{current_date}_audio.wav")  
+                                try:
+                                    os.rename(old_filepath, new_filepath)
+                                    df.at[index, 'Name'] = new_name
+                                    df.at[index, 'File_Path'] = new_filepath
+                                    df.at[index, 'Language'] = new_language if new_language != "Select" else row["Language"]
+                                    df.to_csv('Voice_Records.csv', index=False)
+                                    st.session_state[f"editing_{index}"] = False
+                                    st.success(f"Record {new_name} updated successfully.")
+                                    st.rerun()
+                                except FileNotFoundError:
+                                    st.error(f"File not found: {old_filepath}")
+                                except Exception as e:
+                                    st.error(f"An error occurred: {e}")              
+
+                        with col4:
+                            if st.button(f"Cancel: {row['Name']}", key=f"cancel_{index}"):
+                                st.session_state[f"editing_{index}"] = False
+                                st.rerun()
 
                     st.write("---")
             else:
@@ -309,16 +350,6 @@ def playback_page():
             st.warning("Record file not found.")
 
 
-def combine_audio_files(audio_files):
-    combined = AudioSegment.empty()
-    for file in audio_files:
-        sound = AudioSegment.from_mp3(file)
-        combined += sound
-    return combined
-
-
-def save_combined_audio(audio_segment, output_filepath):
-    audio_segment.export(output_filepath, format="mp3")
 
 
 def check_existing_words_in_sentence(sentence, creator, language):
@@ -344,8 +375,8 @@ def check_existing_words_in_sentence(sentence, creator, language):
         return words, []  
 
 
-def sentence_check_page():
 
+def sentence_check_page():
     st.markdown(
         """
         <style>
@@ -381,12 +412,15 @@ def sentence_check_page():
         unsafe_allow_html=True
     )
 
-    st.markdown('<h1 class="big-title">Make A Sentence</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="big-title">Separate Sentence</h1>', unsafe_allow_html=True)
 
-    creators_list = ["Select"] + ["Ahmet Yasin Aydın", "Ramazan Tetik", "Dilan Nihadioğlu", "Gökhan Ergül", "Ahmet Muhammed Aydın", 
-                     "Nihat Kepkan", "Burak Cankurt", "Azime Şimşek", "Esra Aydın", "Sadık Can Barut", "Ali Kaynakçı"]
-
+    creators_list = ["Select"] + [
+        "Ahmet Yasin Aydın", "Ramazan Tetik", "Dilan Nihadioğlu", "Gökhan Ergül", 
+        "Ahmet Muhammed Aydın", "Nihat Kepkan", "Burak Cankurt", 
+        "Azime Şimşek", "Esra Aydın", "Sadık Can Barut", "Ali Kaynakçı"
+    ]
     language_list = ["Select", "Turkish", "English"]
+
 
     creator = st.selectbox("Select Creator:", creators_list, key="sentence_creator")
     language = st.selectbox("Select Language:", language_list, key="sentence_language")
@@ -395,44 +429,31 @@ def sentence_check_page():
         sentence = st.text_input("Enter a sentence:")
 
         if sentence:
-            missing_words, existing_audio_files = check_existing_words_in_sentence(sentence, creator, language)
 
+            words_in_sentence = sentence.split()
+            
+            missing_words, existing_audio_files = check_existing_words_in_sentence(sentence, creator, language)
             if missing_words:
-                st.warning(f"No record was created by **{creator}** for words **{', '.join(missing_words)}** in language **{language}**")
-            else:
-                st.success("All words exist in the records!")
-                
-                combined_audio = combine_audio_files(existing_audio_files)
-                
-                output_filepath = f"{creator}_{language}_combined_sentence.mp3"
-                save_combined_audio(combined_audio, output_filepath)
-                
-             
-                st.markdown("### Play individual words")
+                st.warning(f"No record was created by **{creator}** for the following words in **{language}**: {', '.join(missing_words)}")
+            
+      
+            if existing_audio_files:
+                st.success("The following words are found and playable:")
                 for i, audio_file in enumerate(existing_audio_files):
-                    word = sentence.split()[i]
-                    if st.button(f"Play '{word}'"):
+                    word = words_in_sentence[i]
+                    st.markdown(f"- **{word}**")
+                    if st.button(f"Play '{word}'", key=f"play_{word}"):
                         with open(audio_file, 'rb') as f:
                             audio_bytes = f.read()
-                            st.audio(audio_bytes, format='audio/mp3')
-
-
-                st.markdown("### Play the sentence")
-                with open(output_filepath, 'rb') as audio_file:
-                    audio_bytes = audio_file.read()
-                    st.audio(audio_bytes, format='audio/mp3')
-                             
-                with open(output_filepath, 'rb') as f:
-                    st.markdown(
-                        f'<a href="data:audio/mp3;base64,{base64.b64encode(f.read()).decode()}" '
-                        f'download="{output_filepath}" class="download-button">Download Combined Sentence</a>',
-                        unsafe_allow_html=True
-                    )
+                            st.audio(audio_bytes, format='audio/wav')
+            else:
+                st.error("No words were found in the database.")
     else:
         st.info("Please select both a creator and a language.")
 
 
-tab1, tab2, tab3 = st.tabs(["Record Audio", "Listen to Audio Recordings", "Make A Sentence"])
+tab1, tab2, tab3 = st.tabs(["Record Audio", "Listen to Audio Recordings", "Separate Sentence"])
+
 
 with tab1:
     record_page()

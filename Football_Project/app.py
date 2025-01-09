@@ -24,6 +24,12 @@ league_logos = {
 background_images = {
     "France": os.path.join(project_root, "logos", "france-background.jpeg"),
     "Germany": os.path.join(project_root,  "logos", "germany_background.jpeg"),
+    "Spain": os.path.join(project_root,  "logos","Designer (22).jpeg"),
+    "Italy": os.path.join(project_root,  "logos","Designer (21).jpeg"),
+    "Turkey": os.path.join(project_root,  "logos","turkey.jpeg"),
+    "England": os.path.join(project_root,  "logos" ,"Designer (18).jpeg"),
+    
+    
     "default": os.path.join(project_root, "background.jpeg")
 }
 def get_base64_image(image_path):
@@ -148,54 +154,7 @@ def load_data_from_csv(file_path):
     except FileNotFoundError:
         return None
 
-# def fetch_and_display_data(country, league, year, data):
-#     placeholder = st.empty()
-#     with placeholder:
-#         st.markdown("<h2>Fetching data...</h2>", unsafe_allow_html=True)
 
-#     if country != "Select" and league != "Select":
-#         try:
-#             leagues_list = [league] if league != "All Leagues" else list(data[data['Country'] == country]['League'].unique())
-#             years_list = [year] if year != "Select" else [str(y) for y in range(2023, 2009, -1)]
-
-#             country_url = country.lower()
-#             scrap(country_url, leagues_list, years_list)
-
-#             time.sleep(5)  # Daha uzun bekleme süresi
-
-#             for league in leagues_list:
-#                 league_formatted = league.lower().replace(' ', '_').replace('.', '')
-#                 csv_filename = f"football_data_{country_url}_{league_formatted}.csv"
-#                 full_path = os.path.join(os.getcwd(), csv_filename)
-
-#                 if os.path.exists(full_path):
-#                     display_scraped_data(full_path, league)
-#                 else:
-#                     st.warning(f"CSV file not found for {league}: {csv_filename}")
-#                     st.error("No data was fetched. Please check the scraping process.")
-#         except Exception as e:
-#             st.error(f"An error occurred while scraping data: {str(e)}")
-
-# def display_scraped_data(file_path, league):
-#     scraped_data = pd.read_csv(file_path)
-#     if not scraped_data.empty:
-#         # Replace missing data placeholder
-#         scraped_data.replace('Data not collected', 'Erişilemedi', inplace=True)
-
-#         st.success(f"Data fetched successfully for {league}!")
-#         st.markdown(f"""
-#             <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.5); color: #FFFFFF;">
-#             <h2 style="text-align: center; color: #FFD700;">Match Data for {league}</h2>
-#             </div>
-#         """, unsafe_allow_html=True)
-#         st.dataframe(scraped_data)
-        
-#         csv = scraped_data.to_csv(index=False)
-#         b64 = base64.b64encode(csv.encode()).decode()
-#         href = f'<a href="data:file/csv;base64,{b64}" download="{league}.csv"><button style="background-color: #FFD700; color: black; border: none; border-radius: 5px; padding: 10px 20px; cursor: pointer; transition: background-color 0.3s; margin-top: 20px;">Download CSV</button></a>'
-#         st.markdown(href, unsafe_allow_html=True)
-#     else:
-#         st.warning(f"No data found for {league}. Please check the scraping process.")
 
 set_background_image(background_images["default"])
 data_source = st.sidebar.selectbox("Select Data Source:", ["Select", "CSV", "Ethernet"])
@@ -210,11 +169,12 @@ if data_source == "CSV":
             selected_country = st.sidebar.selectbox("Select Country:", countries)
 
             show_results_enabled = True
-            
+                        
             if selected_country != "Select":
                 set_background_image(background_images[selected_country])
             else:
                 set_background_image(background_images["default"])
+
 
             if selected_country != "Select":
                 leagues = ["Select"] + ["All Leagues"] + list(data[data['Country'] == selected_country]['League'].unique())
@@ -378,64 +338,46 @@ elif data_source == "Ethernet":
         ligler_dict = {country: list(data[data['Country'] == country]['League'].unique()) for country in ulkeler[1:]}  # Ligleri CSV'den al
 
         # Kullanıcıdan seçim al
-        secilen_ulke = st.sidebar.selectbox("Ülke Seçin", ulkeler)  # Sol tarafta açılır menü
+        secilen_ulke = st.sidebar.selectbox("Select Country", ulkeler, key="secilen_ulke")  # Benzersiz anahtar eklendi
         if secilen_ulke != "Select":
-            secilen_lig = st.sidebar.selectbox("Lig Seçin", ligler_dict.get(secilen_ulke, []))  # Sol tarafta açılır menü
-            secilen_yil = st.sidebar.selectbox("Yıl Seçin", list(range(2000, 2025)))  # Yıllar sabit
-            butona_basildi = st.sidebar.button("Veriyi Çek")  # Sol tarafta buton
+            secilen_lig = st.sidebar.selectbox("Select League", ligler_dict.get(secilen_ulke, []), key="secilen_lig")  # Benzersiz anahtar eklendi
+            secilen_yil = st.sidebar.selectbox("Select Year", list(range(2000, 2025)), key="secilen_yil")  # Benzersiz anahtar eklendi
+            butona_basildi = st.sidebar.button("Fetch Data")  # Sol tarafta buton
             if butona_basildi:
                 # Kullanıcı bilgilerini yazdır
-                st.write(f"{secilen_ulke} - {secilen_lig} - {secilen_yil} yılı için veri çekiliyor...")
+                st.markdown(f"""
+                <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.7); color: #FFD700; text-align: center;">
+                    <h2>Data Fetching..The process may take a few minutes.</h2>
+                    <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} for years data fetching.</p>
+                </div>
+                """, unsafe_allow_html=True)
 
-                try:
-                    # Veri çekme işlemi
-                    df = scrap(secilen_ulke, [secilen_lig], [f"{secilen_yil}/{secilen_yil + 1}"])
-                    if df is None:
-                        st.error("Veri çekme işlemi başarısız oldu. Lütfen parametreleri kontrol edin.")
-                    else:
-                        st.write("Çekilen Veri:")
-                        st.dataframe(df)
-                        csv = df.to_csv(index=False).encode("utf-8")
-                        st.download_button("Veriyi İndir", data=csv, file_name="veri.csv", mime="text/csv")
-                        # CSV dosyası olarak indirme seçeneği sun
-                except Exception as e:
-                    pass
+                with st.spinner("Loading..."):
+                    try:
+                        # Veri çekme işlemi
+                        df = scrap(secilen_ulke, [secilen_lig], [f"{secilen_yil}/{secilen_yil + 1}"])
+                        if df is None:
+                            st.error("Data extraction failed. Please check the parameters.")
+                        else:
+                            # Tasarım mesajı
+                            st.markdown(f"""
+                            <div style="border: 2px solid #FFD700; border-radius: 8px; padding: 10px; background-color: rgba(30, 30, 30, 0.7); color: #FFD700; text-align: center;">
+                                <h2>Data Fetching</h2>
+                                <p>{secilen_ulke} - {secilen_lig} - {secilen_yil} for years data fetching....</p>
+                            </div>
+                            """, unsafe_allow_html=True)
 
-    else:
-        st.error("CSV dosyası yüklenemedi. Lütfen dosyanın mevcut olduğundan emin olun.")
-        
-    csv_country_league = os.path.join(project_root, "country_league.csv")
-    data = load_data_from_csv(csv_country_league)  # Dosya yolunu güncelledim
-    
-    if data is not None:
-        ulkeler = ["Select"] + list(data['Country'].unique())  # Ülkeleri CSV'den al
-        ligler_dict = {country: list(data[data['Country'] == country]['League'].unique()) for country in ulkeler[1:]}  # Ligleri CSV'den al
+                            # Çekilen veriyi göster
+                            st.write("Fetch Data:")
+                            st.dataframe(df)
 
-        # Kullanıcıdan seçim al
-        secilen_ulke = st.sidebar.selectbox("Ülke Seçin", ulkeler)  # Sol tarafta açılır menü
-        if secilen_ulke != "Select":
-            secilen_lig = st.sidebar.selectbox("Lig Seçin", ligler_dict.get(secilen_ulke, []))  # Sol tarafta açılır menü
-            secilen_yil = st.sidebar.selectbox("Yıl Seçin", list(range(2000, 2025)))  # Yıllar sabit
-            butona_basildi = st.sidebar.button("Veriyi Çek")  # Sol tarafta buton
-            if butona_basildi:
-                # Kullanıcı bilgilerini yazdır
-                st.write(f"{secilen_ulke} - {secilen_lig} - {secilen_yil} yılı için veri çekiliyor...")
+                            # İstatistikleri görselleştirme
+                            # ... existing visualization code ...
 
-                # scrap fonksiyonunu çalıştır
-                try:
-                    # Veri çekme işlemi
-                    df = scrap(secilen_ulke, [secilen_lig], [f"{secilen_yil}/{secilen_yil + 1}"])
-
-                    # Çekilen veriyi göster
-                    st.write("Çekilen Veri:")
-                    st.dataframe(df)
-
-                    # CSV dosyası olarak indirme seçeneği sun
-                    csv = df.to_csv(index=False).encode("utf-8")
-                    st.download_button("Veriyi İndir", data=csv, file_name="veri.csv", mime="text/csv")
-                except Exception as e:
-                    # Hata mesajı göster
-                    st.error(f"Veri çekme sırasında bir hata oluştu: {e}")
-
+                            csv = df.to_csv(index=False).encode("utf-8")
+                            st.download_button("Download Data", data=csv, file_name="veri.csv", mime="text/csv")
+                            # CSV dosyası olarak indirme seçeneği sun
+                    except Exception as e:
+                        st.error(f"Bir hata oluştu: {str(e)}")
     else:
         st.error("CSV dosyası yüklenemedi. Lütfen dosyanın mevcut olduğundan emin olun.")
