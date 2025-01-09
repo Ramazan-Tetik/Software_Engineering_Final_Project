@@ -1,0 +1,167 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Football Application.md</title><style></style></head><body id="preview">
+<head>
+    <meta charset="utf-8">
+    <title>Football Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        h3 {
+            color: #2c3e50;
+            padding-bottom: 5px;
+        }
+
+        h4 {
+            color: #ae2f2f;
+            margin-top: 20px;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        pre {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .important {
+            background-color: #fce4ec;
+            padding: 10px;
+            border-left: 4px solid #e91e63;
+            margin: 10px 0;
+        }
+
+        .note {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-left: 4px solid #43a047;
+            margin: 10px 0;
+        }
+
+        .code-line {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+
+<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="Football_Data_Project_Guide_0"></a>Football Data Project Guide</h1>
+<h2 class="code-line" data-line-start=2 data-line-end=3 ><a id="Introduction_2"></a>1.Introduction</h2>
+<p class="has-line-data" data-line-start="3" data-line-end="4">This guide explains how to install and use the interface to access football data from hundreds of countries and leagues. You will be able to visualize your data, retrieve league information, and download it in a user-friendly manner.</p>
+<h2 class="code-line" data-line-start=6 data-line-end=7 ><a id="System_Requirements_6"></a>2.System Requirements</h2>
+<ul>
+<li class="has-line-data" data-line-start="7" data-line-end="8">Python 3.7 or higher</li>
+<li class="has-line-data" data-line-start="8" data-line-end="9">Compatible web browser (e.g., Chrome, Firefox)</li>
+<li class="has-line-data" data-line-start="9" data-line-end="10">Internet connection (for live data fetching)</li>
+<li class="has-line-data" data-line-start="10" data-line-end="12">Windows, macOS, or Linux operating system</li>
+</ul>
+<h2 class="code-line" data-line-start=12 data-line-end=13 ><a id="Installation_Guide_12"></a>3.Installation Guide</h2>
+<h3 class="code-line" data-line-start=14 data-line-end=15 ><a id="Step_1_Access_the_Repository_14"></a>Step 1: Access the Repository</h3>
+<p class="has-line-data" data-line-start="15" data-line-end="17">Open the GitHub repository link:<br>
+<a href="https://github.com/Ramazan-Tetik/Software_Engineering_Final_Project">Football Project Repository</a></p>
+<h3 class="code-line" data-line-start=18 data-line-end=19 ><a id="Step_2_Download_the_Project_18"></a>Step 2: Download the Project</h3>
+<ol>
+<li class="has-line-data" data-line-start="19" data-line-end="20">Click the &quot;<strong>&lt;&gt; Code</strong>&quot; button.</li>
+<li class="has-line-data" data-line-start="20" data-line-end="22">Select the &quot;<strong>Download ZIP</strong>&quot; option.</li>
+<img src="gifs/github.png" alt="Github">
+</ol>
+<h3 class="code-line" data-line-start=22 data-line-end=23 ><a id="Step_3_Extract_the_Files_22"></a>Step 3: Extract the Files</h3>
+<p class="has-line-data" data-line-start="23" data-line-end="24">After downloading, extract all files from the ZIP archive.</p>
+<h3 class="code-line" data-line-start=25 data-line-end=26 ><a id="Step_4_Open_Command_Prompt_25"></a>Step 4: Open Command Prompt</h3>
+<img src="gifs/cmd2.png" alt="" width="700">
+<ol>
+<li class="has-line-data" data-line-start="26" data-line-end="27">Navigate to the extracted folder.</li>
+<li class="has-line-data" data-line-start="27" data-line-end="29">In the file path area, type <code>cmd</code> and press <strong>Enter</strong>.</li>
+</ol>
+<h3 class="code-line" data-line-start=36 data-line-end=37 ><a id="Step_6_Navigate_to_the_Project_Folder_36"></a>Step 5: Navigate to the Project Folder</h3>
+<p class="has-line-data" data-line-start="37" data-line-end="38">Change to the project directory by entering:</p>
+<pre><code class="has-line-data" data-line-start="40" data-line-end="42" class="language-bash"><span class="hljs-built_in">cd</span> Football_Project
+</code></pre>
+<h3 class="code-line" data-line-start=29 data-line-end=30 ><a id="Step_5_Install_Required_Libraries_29"></a>Step 6: Install Required Libraries</h3>
+<p class="has-line-data" data-line-start="30" data-line-end="31">Run the following command to install the necessary libraries:</p>
+<pre><code class="has-line-data" data-line-start="33" data-line-end="35" class="language-bash">pip install requirements.txt
+</code></pre>
+
+<h3 class="code-line" data-line-start=43 data-line-end=44 ><a id="Step_7_Launch_the_Application_43"></a>Step 7: Launch the Application</h3>
+<p class="has-line-data" data-line-start="44" data-line-end="45">Run the application by entering:</p>
+<pre><code class="has-line-data" data-line-start="47" data-line-end="49" class="language-bash">streamlit run app.py
+</code></pre>
+<p class="has-line-data" data-line-start="50" data-line-end="51">If you encounter any warnings or prompts from your computer, ensure you allow them.</p>
+<h2 class="code-line" data-line-start=53 data-line-end=54 ><a id="User_Interface_Overview_53"></a>4.User Interface Overview</h2>
+<p class="has-line-data" data-line-start="54" data-line-end="55">Once the application is running, the interface will open in your browser. You can now easily use the features provided.</p>
+<img src="gifs/futbol_giris.gif" alt="giris">
+<h2 class="code-line" data-line-start=57 data-line-end=58 ><a id="Features_and_Functionalities_57"></a>5.Features and Functionalities</h2>
+<h3 class="code-line" data-line-start=59 data-line-end=60 ><a id="1_Data_Source_Options_59"></a>1. Data Source Options</h3>
+<h4 class="code-line" data-line-start=61 data-line-end=62 ><a id="CSV_Option_61"></a>CSV Option</h4>
+<ul>
+<li class="has-line-data" data-line-start="62" data-line-end="64">Upload existing CSV files to visualize data interactively.</li>
+<img src="gifs/futbol_csv.gif" alt="csv">
+</ul>
+<h4 class="code-line" data-line-start=64 data-line-end=65 ><a id="Ethernet_Option_64"></a>Ethernet Option</h4>
+<ul>
+<li class="has-line-data" data-line-start="65" data-line-end="66">Fetch live data from the <a href="https://www.flashscore.com/">FlashScore</a> website.</li>
+<li class="has-line-data" data-line-start="66" data-line-end="67">Apply filters to customize your dataset.</li>
+<img src="gifs/ethernet1.gif" alt="">
+<img src="gifs/ethernet2.gif" alt="">
+<li class="has-line-data" data-line-start="67" data-line-end="68">Download the extracted data directly.</li>
+<img src="gifs/downlooad.png" alt="">
+</ul>
+<h2 class="code-line" data-line-start=70 data-line-end=71 ><a id="Usage_Instructions_70"></a>6.Usage Instructions</h2>
+<ol>
+<li class="has-line-data" data-line-start="71" data-line-end="72">Start the application using the steps in the <strong>Installation Guide</strong>.</li>
+<li class="has-line-data" data-line-start="72" data-line-end="73">Choose between the <strong>CSV Option</strong> or <strong>Ethernet Option</strong> from the interface.</li>
+<li class="has-line-data" data-line-start="73" data-line-end="74">Fetch live data based on your requirements.</li>
+<li class="has-line-data" data-line-start="74" data-line-end="75">Apply filters as needed to view and analyze the data.</li>
+<li class="has-line-data" data-line-start="75" data-line-end="76">Download the dataset in CSV format for further use.</li>
+<li class="has-line-data" data-line-start="75" data-line-end="76">The system allows users to modify filters dynamically during the data extraction process. Updated filters are immediately applied, and the system retrieves new data based on these changes, seamlessly integrating it with the previously collected data for a smooth and flexible user experience.</li>
+
+</ol>
+<h2>7. Troubleshooting and Maintenance</h2>
+
+<h3>Common Issues:</h3>
+<ul>
+  <li><strong>Missing Data for Older Matches:</strong> If users attempt to fetch data for very old matches, the information may not be available, resulting in an error message. It's important for users to make reasonable selections, such as choosing a more suitable date range, to minimize missing data issues.</li>
+  <li><strong>Dependency Errors:</strong> Ensure all required libraries are installed using <code>pip install</code>.</li>
+  <li><strong>Browser Compatibility:</strong> Use the latest version of your web browser to avoid compatibility issues.</li>
+</ul>
+
+<h3>Maintenance:</h3>
+<ul>
+  <li><strong>Regularly Update Codebase:</strong> Frequently update the codebase from the repository to ensure compatibility with the latest features and prevent potential issues.</li>
+</ul>
+
+<h2 class="code-line" data-line-start=87 data-line-end=88 ><a id="References_87"></a>8.References</h2>
+<ul>
+<li class="has-line-data" data-line-start="88" data-line-end="89"><a href="https://github.com/Ramazan-Tetik/Software_Engineering_Final_Project">GitHub Repository</a></li>
+<li class="has-line-data" data-line-start="89" data-line-end="90"><a href="https://docs.streamlit.io/develop/concepts/architecture/run-your-app">Run Your Code with Streamlit</a></li>
+</ul>
+
+</body></html>

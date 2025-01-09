@@ -1,0 +1,181 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Car Application</title><style></style></head><body id="preview">
+<head>
+    <meta charset="utf-8">
+    <title>Second-hand Car Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        h3 {
+            color: #2c3e50;
+            padding-bottom: 5px;
+        }
+
+        h4 {
+            color: #ae2f2f;
+            margin-top: 20px;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        pre {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .important {
+            background-color: #fce4ec;
+            padding: 10px;
+            border-left: 4px solid #e91e63;
+            margin: 10px 0;
+        }
+
+        .note {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-left: 4px solid #43a047;
+            margin: 10px 0;
+        }
+
+        .code-line {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Manual:Second-Hand Car Project</title>
+</head>
+<body>
+    <h1>User Manual: Second-Hand Car Project </h1>
+
+    <h2>Introduction</h2>
+    <p>This application is designed for collecting, filtering, and analyzing vehicle data. Users can dynamically fetch data from <strong>arabam.com</strong>, <strong>autoscout24.com</strong>, and <strong>cars.com</strong> and perform various filtering operations on this data. Each retrieved dataset is displayed in a card format on the relevant page and can be downloaded as a CSV file.</p>
+
+    <h2>System Requirements</h2>
+    <ul>
+        <li><strong>Operating System:</strong> Windows 10 or later, macOS, Linux</li>
+        <li><strong>Storage:</strong> Minimum 500 MB of free space</li>
+        <li><strong>Software:</strong>
+            <ul>
+                <li>Python 3.9 or later</li>
+                <li>Selenium</li>
+                <li>Streamlit</li>
+                <li>pandas</li>
+            </ul>
+        </li>
+        <li><strong>Web Browser:</strong> Google Chrome (latest version)</li>
+    </ul>
+
+    <h2>Installation Guide</h2>
+    <ol>
+        <li>Visit the <a href="https://github.com/Ramazan-Tetik/Software_Engineering_Final_Project/tree/main">GitHub</a> repository.</li>
+        <li>Click the "Code" button in the top-right corner and select "Download ZIP" to download the files.</li>
+        <img src="gifs/github.png" alt="installation_guide">
+        <li>Extract the downloaded ZIP file to an appropriate folder on your computer.</li>
+        <li>Open the terminal or command prompt and navigate to the project folder:</li>
+        <img src="gifs/cmd.png" alt="cmd">
+        <img src="gifs/cmd2.png" alt="cmdd">
+        <pre><code>cd Software_Engineering_Final_Project</code></pre>
+        <li>Enter the Second-hand Car Project folder:</li>
+        <pre><code>cd Second-hand Car Project</code></pre>
+        <li>Install the required dependencies by running the following command:</li>
+        <pre><code>pip install -r requirements.txt</code></pre>
+        <li>Start the application using the following command:</li>
+        <pre><code>streamlit run Homepage.py</code></pre>
+    </ol>
+
+    <h2>User Interface Overview</h2>
+    <ul>
+        <li><strong>Homepage:</strong> Contains links to all pages. Includes a total of 6 pages.</li>
+        <img src="gifs/home_page.gif" alt="home_page">
+        <li><strong>CSV Data Pages (3 Pages):</strong> Data collected from <strong>arabam.com</strong>, <strong>autoscout24.com</strong>, and <strong>cars.com</strong> is displayed here in card format and can be downloaded as CSV files.</li>
+        
+        <li><strong>Dynamic Data Fetching Pages:</strong> Each site has a dedicated dynamic data fetching page. Dropdown menus allow users to select brand, model, and other filtering options. Data can then be fetched directly.</li>
+    </ul>
+
+    <h2>Features and Functionalities</h2>
+    <ul>
+        <li><strong>Pre-Collected Rich Datasets:</strong> Analyze thousands of pre-collected data points from three different websites.</li>
+        <li><strong>Dynamic Data Fetching:</strong> Fetch data in real-time based on user selections.</li>
+        <li><strong>Filtering:</strong> Filter data by criteria such as brand, model, mileage, and price range.</li>
+        <li><strong>Card Format Display:</strong> Each data point is presented in a well-organized and detailed card format.</li>
+        <li><strong>Data Download:</strong> Download customized data in CSV format. Additionally, dynamically fetched data can also be downloaded in CSV format.</li>
+        <li><strong>Automation:</strong> Fetch data automatically using Selenium without manual intervention.</li>
+    </ul>
+
+    <h2>Usage Instructions</h2>
+    <h3>Homepage</h3>
+    <p>Contains links to pages for data and operations.</p>
+
+    <h3>CSV Data Pages</h3>
+    <ol>
+        <li>Select a site (<strong>arabam.com</strong>, <strong>autoscout24.com</strong>, <strong>cars.com</strong>).</li>
+        <li>Choose filtering criteria such as brand and model from dropdown menus.</li>
+        <li>Click the "Search" button.</li>
+        <li>View and filter pre-collected data.</li>
+        <li>Use the "Download CSV File" button to download the data.</li>
+        <img src="gifs/csv_arabam.gif" alt="arabam">
+        <img src="gifs/csv_autoscout.gif" alt="autoscout">
+        <img src="gifs/csv_cars.gif" alt="cars">
+    </ol>
+
+    <h3>Dynamic Data Fetching</h3>
+    <ol>
+        <li>Select a site (<strong>arabam.com</strong>, <strong>autoscout24.com</strong>, <strong>cars.com</strong>).</li>
+        <li>Choose filtering criteria such as brand and model from dropdown menus.</li>
+        <li>Click the "Fetch Data" button.</li>
+        <img src="gifs/arabam_dynamic.gif" alt="arabam_dynamic">
+        <img src="gifs/arabam_dynamic2.gif" alt="">
+    </ol>
+
+    <h3>Downloading Results</h3>
+    <p>After filtering, use the "Download CSV File" button to download the data.</p>
+    <img src="gifs/download.png" alt="download" width="500">
+
+    <h2>Troubleshooting and Maintenance</h2>
+    <ul>
+        <li><strong>Application Not Starting:</strong> Ensure that Python and the libraries listed in the requirements file are correctly installed. If needed, install them individually.</li>
+        <li><strong>Data Not Fetching:</strong> Avoid clicking the same buttons multiple times, as this may cause traffic on the site. Ensure you click the "Retrieve Data" button.</li>
+    </ul>
+
+    <h2>References</h2>
+    <ul>
+        <li><a href="https://docs.streamlit.io/develop/concepts/architecture/run-your-app">https://docs.streamlit.io/develop/concepts/architecture/run-your-app</a></li>
+        <li><a href="https://www.python.org/">https://www.python.org/</a></li>
+    </ul>
+</body>
+</html>
+

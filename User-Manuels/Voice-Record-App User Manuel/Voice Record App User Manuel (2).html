@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Voice Record Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        h3 {
+            color: #2c3e50;
+            padding-bottom: 5px;
+        }
+
+        h4 {
+            color: #ae2f2f;
+            margin-top: 20px;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        pre {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: Consolas, "Courier New", monospace;
+        }
+
+        a {
+            color: #e74c3c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .important {
+            background-color: #fce4ec;
+            padding: 10px;
+            border-left: 4px solid #e91e63;
+            margin: 10px 0;
+        }
+
+        .note {
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-left: 4px solid #43a047;
+            margin: 10px 0;
+        }
+
+        .code-line {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body id="preview">
+    <h2>Voice Record Project: Simple Guide to Run the Application</h2>
+
+    <h3>1. Introduction</h3>
+    <p>This document provides a comprehensive guide to using the Voice Record application, outlining its key features, setup process, and usage instructions. Whether you're a beginner or an advanced user, this manual will assist you in making the most of the application.</p>
+
+    <h3>2. System Requirements</h3>
+    <ul>
+        <li>Python (version 3.8 or higher).</li>
+        <li>Operating System: Windows, macOS, or Linux.</li>
+        <li>Required Libraries: Installed via the provided <code>requirements.txt</code> file.</li>
+    </ul>
+
+    <h3>3. Installation Guide</h3>
+    <h4>Step 1: Download the Project</h4>
+    <p>To download the project from GitHub:</p>
+    <img src="gifs/github.png" alt="">
+    <ol>
+        <li>Visit the repository: <a href="https://github.com/Ramazan-Tetik/Software_Engineering_Final_Project">Software Engineering Final Project</a>.</li>
+        <li>Click the green <strong>"Code"</strong> button and select <strong>"Download ZIP"</strong>.</li>
+        <li>Extract the downloaded ZIP file to a folder on your computer.</li>
+    </ol>
+
+    <h4>Step 2: Install Python</h4>
+    <p>Ensure Python is installed on your computer:</p>
+    <ul>
+        <li>Download it from <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a>.</li>
+    </ul>
+
+    <h4>Step 3: Install Necessary Libraries</h4>
+    <p>Open the folder where you saved the project:</p>
+    <ol>
+        <img src="gifs/cmd1.png" alt="">
+        <img src="gifs/cmd2.png" alt="">
+        
+
+        <h2>Installing the `sounddevice` Library</h2>
+
+        <p>To install the <code>sounddevice</code> library in Python, follow the steps below:</p>
+        
+        <ol>
+          <li>
+            Open the Command Prompt and check the Python installations available on your system using the following command:
+            <pre><code>where python</code></pre>
+            <p>Example output:</p>
+            <pre>
+        C:\Users\dilan\anaconda3\python.exe
+        C:\Users\dilan\AppData\Local\Programs\Python\Python313\python.exe
+            </pre>
+          </li>
+          <li>
+            Use the path to the desired Python executable to run the <code>pip install</code> command. For instance:
+            <pre><code>C:\Users\dilan\AppData\Local\Programs\Python\Python310\python.exe -m pip install sounddevice</code></pre>
+          </li>
+          <li>
+            After running the command, you should see a message indicating that the <code>sounddevice</code> library was successfully installed:
+            <blockquote>
+              Successfully installed sounddevice-0.5.1
+            </blockquote>
+          </li>
+        </ol>
+        
+        
+
+        <li>Right-click inside the folder and choose “Open in Terminal” or open a terminal and navigate to the folder using:
+            <pre><code>cd .\Software_Engineering_Final_Project-main\Voice_Record_Project</code></pre>
+        </li>
+        <li>Type this command and press Enter:
+            <pre><code>pip install -r requirements.txt</code></pre>
+
+            <p>This will install everything needed to run the project.</p>
+        </li>
+    </ol>
+
+    <h4>Step 4: Start the Project</h4>
+    <ol>
+        <li>While still in the terminal, type this command and press Enter:
+            <pre><code>streamlit run app.py</code></pre>
+        </li>
+        <li>Wait for a few seconds. A browser window will open automatically showing the application.</li>
+    </ol>
+    <p>That’s it! 🎉 You can now use the application to record, listen to, and manage audio. If you face any issues, double-check that Python and the required libraries are installed correctly.</p>
+    <img src="gifs/giris.gif" alt="Giris" width="500">
+
+    <h3>4. User Interface Overview</h3>
+    <p>The application consists of three main pages, each with unique functionality:</p>
+    <ul>
+        <li><strong>Record Audio:</strong> This page allows users to record sound.</li>
+        <li><strong>Listen to Audio Recordings:</strong> This page lists and plays recorded audio files.</li>
+        <li><strong>Separate a Sentence:</strong> This page breaks a sentence into individual words and checks if recordings exist for each.</li>
+    </ul>
+
+    <h3>5. Features and Functionalities</h3>
+    <ul>
+        <li><strong>Interactive and Intuitive Design:</strong> Record, play, edit, and delete audio files seamlessly.</li>
+        <li><strong>Robust Data Management:</strong> Download filtered recordings and manage them efficiently.</li>
+        <li><strong>Error Prevention:</strong> Informative messages guide users to avoid errors.</li>
+    </ul>
+
+    <h3>6. Usage Instructions</h3>
+    <h4>1. Record Audio</h4>
+    <img src="gifs/RECORD_PAGE.gif" alt="Giris" width="500">
+    <ol>
+        <li>Select the Person:
+            <ul>
+                <li>Choose a team member or select ‘Other’ and type your name.</li>
+            </ul>
+        </li>
+        <li>Choose Language:
+            <ul>
+                <li>Pick either Turkish or English.</li>
+            </ul>
+        </li>
+        <li>Enter the Word:
+            <ul>
+                <li>Type the word you want to record.</li>
+            </ul>
+        </li>
+        <li>Start Recording:
+            <ul>
+                <li>Click ‘Start Recording’ to begin recording.</li>
+            </ul>
+        </li>
+        <li>Stop Recording:
+            <ul>
+                <li>Click ‘Stop Recording’ to save the audio.</li>
+            </ul>
+        </li>
+    </ol>
+    <p><strong>Important Notes:</strong>
+        <ul>
+            <li>Recordings are limited to 5 seconds. If you exceed this time, the recording stops automatically without being saved.</li>
+            <li>This page is designed for single-word recordings.</li>
+        </ul>
+    </p>
+
+    <h4>2. Listen to Audio Recordings</h4>
+    <img src="gifs/listen_page.gif" alt="Giris" width="500">
+    <ol>
+        <li>Filter Data:
+            <ul>
+                <li>Select the person and language to filter the recordings.</li>
+            </ul>
+        </li>
+        <li>View Details:
+            <ul>
+                <li>Filtered recordings display the following:
+                    <ul>
+                        <li>Word</li>
+                        <li>Audio File</li>
+                        <li>Creator’s Name</li>
+                        <li>Language</li>
+                        <li>Recording Date</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>Edit or Delete Recordings:
+            <ul>
+                <li>Use the ‘Edit’ button to update the word or language.</li>
+                <li>Use the ‘Delete’ button to remove unwanted recordings.</li>
+            </ul>
+        </li>
+        <li>Download Data:
+            <ul>
+                <li>Click ‘Download Filtered Recordings’ to save:
+                    <ul>
+                        <li>A CSV file with metadata.</li>
+                        <li>A Recordings folder containing audio files.</li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ol>
+    <p><strong>Important Notes:</strong>
+        <ul>
+            <li>If no recordings match the filter, a warning message is displayed.</li>
+            <li>Cancel edits anytime using the ‘Cancel’ button.</li>
+        </ul>
+    </p>
+
+    <h4>3. Separate A Sentence</h4>
+    <img src="gifs/sentence.gif" alt="Giris" width="500">
+    <ol>
+        <li>Filter Data:
+            <ul>
+                <li>Select the person and language.</li>
+            </ul>
+        </li>
+        <li>Enter a Sentence:
+            <ul>
+                <li>Type a sentence, and the program will split it into words.</li>
+            </ul>
+        </li>
+        <li>Search for Words:
+            <ul>
+                <li>The system checks for recordings of each word based on the filters.</li>
+            </ul>
+        </li>
+        <li>Play Words:
+            <ul>
+                <li>Buttons are available to play recordings of each word individually.</li>
+            </ul>
+        </li>
+    </ol>
+    <p><strong>Important Notes:</strong>
+        <ul>
+            <li>If a word is not found, a warning message is displayed.</li>
+        </ul>
+    </p>
+
+    <h3>7. Troubleshooting and Maintenance</h3>
+    <ul>
+        <li>Ensure Python and required libraries are correctly installed.</li>
+        <li>If the application does not run, verify your <code>requirements.txt</code> dependencies.</li>
+        <li>Contact support for unresolved issues.</li>
+    </ul>
+
+    <h3>8. References</h3>
+    <ul>
+        <li><a href="https://www.python.org/downloads/">Python Official Website</a></li>
+        <li><a href="https://docs.streamlit.io/develop/concepts/architecture/run-your-app/">Streamlit Running</a></li>
+        
+    </ul>
+</body>
+
+</html>
